@@ -11,11 +11,12 @@ function App() {
     api.get('repositories').then(response => {
         setRepositories(response.data);
     })
-  }, [repositories])
+  }, [])
 
   async function handleAddRepository() {
     const response = await  api.post('repositories', {
-      title: `Novo Repositorio ${Date.now()}`,
+      // title: `Novo Repositorio ${Date.now()}`,
+      title: 'Desafio ReactJS',
       url: 'https://github.com/lucianomalta/conceitos-react-js.git',
       techs: ['Nodejs'],
       likes: "0"
@@ -26,9 +27,11 @@ function App() {
   }
 
   async function handleRemoveRepository(id) {
-    await  api.delete('repositories/' + id);
+    await  api.delete(`repositories/${id}`);
     api.get('repositories').then(response => {
-      setRepositories(response.data);
+      setRepositories(repositories.filter(
+        repositorie => repositorie.id !== id
+      ));
   })
   
   }
@@ -39,7 +42,7 @@ function App() {
         <>
           {repositories.map( repositorie => <li key={repositorie.id}>{repositorie.title}
 
-            <button value={repositorie.id} onClick={e => handleRemoveRepository(e.target.value)}>
+            <button onClick={() => handleRemoveRepository(repositorie.id)}>
               Remover
             </button>
             
